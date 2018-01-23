@@ -1,0 +1,31 @@
+#!/bin/sh
+current_dir=$(pwd)
+tftp_dir="tftp"
+name="tftp_bootp"
+
+if [ ! -d "$tftp_dir" ]; then
+		echo "Please make sur the directory $tftp_dir is in the current directory"
+		echo "Docker not started"
+		exit 1
+fi
+
+case "$1" in
+build)
+	echo "Building docker..."
+	docker build . -v "$current_dir"/"$tftp_dir":/srv/tftp -t "$name"
+	;;
+start)
+	echo "Starting docker..."
+	docker run --network=host --privileged --name="$name" -v "$current_dir"/"$tftp_dir":/srv/tftp -t "$name"
+	;;
+stop)
+	echo "Stoping docker $name..."
+	docker stop "$name"
+	docker rm "$name" > /dev/null 2>&1
+	;;
+
+*)
+	echo "Usage $0 {build|start|stop}"
+	exit 1
+	;;
+esac

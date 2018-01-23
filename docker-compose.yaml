@@ -1,0 +1,8 @@
+version: "3.0"
+services:
+    dhcpd:
+        privileged: true
+        build: .
+        network_mode: host
+        volumes:
+            - ./tftp:/srv/tftp
